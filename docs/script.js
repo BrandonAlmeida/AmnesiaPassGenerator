@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const keywordInput = document.getElementById('keyword');
+    const serviceInput = document.getElementById('service');
     const numCharsInput = document.getElementById('numChars');
     const iterationsInput = document.getElementById('iterations');
     const algorithmSelect = document.getElementById('algorithm');
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generatePassword() {
         const keyword = keywordInput.value;
+        const service = serviceInput.value;
         let numChars = parseInt(numCharsInput.value);
         let iterations = parseInt(iterationsInput.value);
         const algorithm = algorithmSelect.value;
@@ -29,12 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let currentHash = keyword;
 
+        if (service) {
+            currentHash = `${currentHash}:${service}`;
+        }
+
         for (let i = 0; i < iterations; i++) {
             let hashObject;
             switch (algorithm) {
-                case 'MD5':
-                    hashObject = CryptoJS.MD5(currentHash);
-                    break;
                 case 'SHA256':
                     hashObject = CryptoJS.SHA256(currentHash);
                     break;
@@ -42,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     hashObject = CryptoJS.SHA512(currentHash);
                     break;
                 default:
-                    alert('Algoritmo inválido.');
+                    alert('Algoritmo inválido. Use SHA256 ou SHA512.');
                     return;
             }
             currentHash = hashObject.toString(CryptoJS.enc.Hex);

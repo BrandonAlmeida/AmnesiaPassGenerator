@@ -5,27 +5,31 @@ NUM_CHARS=""
 ITERATIONS=""
 ALGO=""
 KEYWORD=""
+SALT=""
 
-# Loop para processar as flags (-c, -i, -a, -p)
-while getopts "c:i:a:p:" opt; do
-  case $opt in
-    c)
-      NUM_CHARS="$OPTARG"
-      ;;
+# Loop para processar as flags (-c, -i, -a, -p, -s)
+while getopts "c:i:a:p:s:" opt; do
+    case $opt in
+        c)
+            NUM_CHARS="$OPTARG"
+            ;;
     i)
       ITERATIONS="$OPTARG"
       ;;
     a)
       ALGO="$OPTARG"
       ;;
-    p)
-      KEYWORD="$OPTARG"
-      ;;
-    \?)
-      echo "Opção inválida: -$OPTARG" >&2
-      exit 1
-      ;;
-    :)
+        p)
+            KEYWORD="$OPTARG"
+            ;;
+        s)
+            SALT="$OPTARG"
+            ;;
+        \?)
+            echo "Opção inválida: -$OPTARG" >&2
+            exit 1
+            ;;
+        :)
       echo "A opção -$OPTARG requer um argumento." >&2
       exit 1
       ;;
@@ -37,21 +41,19 @@ ITERATIONS=${ITERATIONS:-1}
 
 # Validar se os parâmetros obrigatórios (KEYWORD e ALGO) foram preenchidos
 if [ -z "$KEYWORD" ] || [ -z "$ALGO" ]; then
-    echo "Uso: $0 -p <palavra_chave> -a <algoritmo> [-c <num_caracteres>] [-i <num_iteracoes>]"
+    echo "Uso: $0 -p <palavra_chave> -a <algoritmo> [-c <num_caracteres>] [-i <num_iteracoes>] [-s <salt_servico>]"
     echo "  -p: Palavra-chave (seed) para gerar a senha (obrigatório)"
-    echo "  -a: Algoritmo de hash (obrigatório: md5, sha256, sha512)"
+    echo "  -a: Algoritmo de hash (obrigatório: sha256, sha512)"
     echo "  -c: Número de caracteres (opcional, se omitido, retorna o hash completo)"
     echo "  -i: Número de iterações (opcional, padrão: 1)"
+    echo "  -s: Salt ou identificador do serviço (opcional) adicionado à palavra-chave"
     echo ""
-    echo "Exemplo: $0 -p minha_senha -a sha256 -c 10 -i 5"
+    echo "Exemplo: $0 -p minha_senha -a sha256 -c 10 -i 5 -s gmail"
     exit 1
 fi
 
 # Selecionar comando baseada no algoritmo
 case $ALGO in
-    md5)
-        HASH_CMD="md5sum"
-        ;;
     sha256)
         HASH_CMD="sha256sum"
         ;;
@@ -59,12 +61,16 @@ case $ALGO in
         HASH_CMD="sha512sum"
         ;;
     *)
-        echo "Algoritmo inválido. Use: md5, sha256 ou sha512"
+        echo "Algoritmo inválido. Use: sha256 ou sha512"
         exit 1
         ;;
 esac
 
 CURRENT_VAL=$KEYWORD
+
+if [ -n "$SALT" ]; then
+    CURRENT_VAL="${CURRENT_VAL}:$SALT"
+fi
 
 for (( i=1; i<=$ITERATIONS; i++ )); do
     # Gera o hash completo e atualiza CURRENT_VAL para a próxima iteração

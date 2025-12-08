@@ -20,6 +20,11 @@
             </div>
 
             <div class="input-group">
+                <label for="service">Salt/Serviço (opcional):</label>
+                <input type="text" id="service" placeholder="Ex.: github, email, banco">
+            </div>
+
+            <div class="input-group">
                 <label for="numChars">Número de Caracteres (opcional):</label>
                 <input type="number" id="numChars" min="1" placeholder="Deixe em branco para hash completo">
             </div>
@@ -32,7 +37,6 @@
             <div class="input-group">
                 <label for="algorithm">Algoritmo:</label>
                 <select id="algorithm">
-                    <option value="MD5">MD5</option>
                     <option value="SHA256" selected>SHA256</option>
                     <option value="SHA512">SHA512</option>
                 </select>
@@ -57,7 +61,7 @@
             <h3>Como funciona?</h3>
             <p>
                 1. Você insere uma palavra-chave.<br>
-                2. O sistema gera um hash (MD5, SHA256, etc).<br>
+                2. O sistema gera um hash (SHA256 ou SHA512).<br>
                 3. O processo se repete pelo número de iterações definido.<br>
                 4. O resultado final é cortado para o tamanho desejado.
             </p>
