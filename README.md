@@ -44,3 +44,8 @@ Gerar o hash completo (sem corte), com 1 iteração (padrão) usando SHA512:
 
 *   Bash
 *   Coreutils (sha256sum, sha512sum)
+
+## Boas práticas e sugestões de uso
+
+1. Use uma seed/senha mestra forte (frase longa e não óbvia) e um salt por serviço para evitar reutilização direta.
+2. Ao usar o script, cuide para não expor a seed/salt no histórico do terminal ou em clipboards; prefira limpar o histórico sensível e evitar colar em apps não confiáveis.
