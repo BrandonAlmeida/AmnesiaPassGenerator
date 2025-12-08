@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amnesia Pass Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <img src="almeida-logo.png" alt="Almeida Logo" class="app-logo">
+
+    <div class="main-wrapper">
+        <!-- Painel Esquerdo: Gerador -->
+        <div class="container generator-panel">
+            <h1>Amnesia Pass Generator</h1>
+
+            <div class="input-group">
+                <label for="keyword">Palavra-Chave:</label>
+                <input type="text" id="keyword" placeholder="Sua palavra-chave secreta">
+            </div>
+
+            <div class="input-group">
+                <label for="numChars">Número de Caracteres (opcional):</label>
+                <input type="number" id="numChars" min="1" placeholder="Deixe em branco para hash completo">
+            </div>
+
+            <div class="input-group">
+                <label for="iterations">Número de Iterações (padrão: 1):</label>
+                <input type="number" id="iterations" min="1" value="1">
+            </div>
+
+            <div class="input-group">
+                <label for="algorithm">Algoritmo:</label>
+                <select id="algorithm">
+                    <option value="MD5">MD5</option>
+                    <option value="SHA256" selected>SHA256</option>
+                    <option value="SHA512">SHA512</option>
+                </select>
+            </div>
+
+            <button id="generateBtn">Gerar Senha</button>
+
+            <div class="output-group">
+                <label for="result">Senha Gerada:</label>
+                <textarea id="result" rows="3" readonly></textarea>
+            </div>
+        </div>
+
+        <!-- Painel Direito: Informações -->
+        <div class="container info-panel">
+            <h2>Sobre a aplicação</h2>
+            
+            <p>
+                O <strong>Amnesia Pass Generator</strong> é um gerador de senhas determinístico. Ele cria hashes iterativos baseados em uma palavra-chave que você fornece.
+            </p>
+
+            <h3>Como funciona?</h3>
+            <p>
+                1. Você insere uma palavra-chave.<br>
+                2. O sistema gera um hash (MD5, SHA256, etc).<br>
+                3. O processo se repete pelo número de iterações definido.<br>
+                4. O resultado final é cortado para o tamanho desejado.
+            </p>
+
+            <h3>Segurança e Privacidade</h3>
+            <p>
+                Todo o processamento é feito <strong>exclusivamente no seu navegador (Client-Side)</strong>. Nenhuma informação, palavra-chave ou senha gerada é enviada para servidores externos.
+            </p>
+
+            <div class="warning-box">
+                <strong>⚠️ Aviso sobre Iterações:</strong>
+                <p>
+                    Como o processamento é local (usa o processador do seu dispositivo), definir um número excessivamente alto de iterações (ex: milhões) pode causar lentidão ou travamento temporário do navegador. Para uso comum, valores baixos (1 a 1000) são suficientes e instantâneos.
+                </p>
+            </div>
+
+            <h3>Dica de Uso</h3>
+            <p class="tip">
+                Combine o resultado hexadecimal gerado aqui com um prefixo pessoal para adicionar caracteres especiais e letras maiúsculas.<br>
+                Exemplo: <code>MinhaSenh@.</code> + <code>[hash gerado]</code>
+            </p>
+        </div>
+    </div>
+
+    <!-- Inclui a biblioteca crypto-js via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

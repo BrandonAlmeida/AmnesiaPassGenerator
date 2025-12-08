@@ -1,0 +1,177 @@
+/* Reset básico e box-sizing para responsividade */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column; /* Para empilhar a logo e o main-wrapper */
+    justify-content: flex-start; /* Alinha o conteúdo ao topo */
+    align-items: center; /* Centraliza horizontalmente */
+    min-height: 100vh;
+    background-color: #354ead;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Estilo para a logo no topo da página */
+.app-logo {
+    max-width: 200px; /* Tamanho da logo, ajuste se necessário */
+    height: auto;
+    margin-bottom: 20px; /* Espaço abaixo da logo */
+    /* A centralização horizontal já é feita pelo align-items: center no body */
+}
+
+/* Wrapper principal para alinhar os dois painéis */
+.main-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px; /* Largura máxima para os painéis */
+    align-items: flex-start; /* Alinha os painéis ao topo */
+}
+
+/* Estilo base para ambos os painéis */
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1; /* Faz ambos ocuparem o mesmo espaço disponível */
+    text-align: left;
+}
+
+/* Ajustes específicos para o painel do gerador */
+.generator-panel h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* Ajustes para o painel de informações */
+.info-panel h2 {
+    margin-top: 0;
+    color: #007bff;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.info-panel h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #444;
+    font-size: 1.1em;
+}
+
+.info-panel p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+}
+
+.input-group, .output-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 60px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-family: monospace;
+}
+
+/* Caixa de aviso */
+.warning-box {
+    background-color: #fff3cd;
+    border-left: 5px solid #ffc107;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.warning-box strong {
+    color: #856404;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.warning-box p {
+    margin: 0;
+    color: #856404;
+    font-size: 0.9em;
+}
+
+.tip {
+    font-size: 0.9em;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 5px solid #6c757d;
+}
+
+code {
+    background-color: #ddd;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+/* Responsividade para telas menores (tablets e celulares) */
+@media (max-width: 768px) {
+    .main-wrapper {
+        flex-direction: column; /* Empilha os painéis verticalmente */
+    }
+    
+    .container {
+        width: 100%; /* Garante largura total no mobile */
+    }
+}
