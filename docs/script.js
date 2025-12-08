@@ -35,9 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
             currentHash = `${currentHash}:${service}`;
         }
 
+        if (algorithm === 'MD5') {
+            console.warn('MD5 não é recomendado; prefira SHA256 ou SHA512.');
+        }
+
         for (let i = 0; i < iterations; i++) {
             let hashObject;
             switch (algorithm) {
+                case 'MD5':
+                    hashObject = CryptoJS.MD5(currentHash);
+                    break;
                 case 'SHA256':
                     hashObject = CryptoJS.SHA256(currentHash);
                     break;
@@ -45,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     hashObject = CryptoJS.SHA512(currentHash);
                     break;
                 default:
-                    alert('Algoritmo inválido. Use SHA256 ou SHA512.');
+                    alert('Algoritmo inválido. Use MD5, SHA256 ou SHA512.');
                     return;
             }
             currentHash = hashObject.toString(CryptoJS.enc.Hex);

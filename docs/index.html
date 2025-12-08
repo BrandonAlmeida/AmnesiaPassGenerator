@@ -37,9 +37,11 @@
             <div class="input-group">
                 <label for="algorithm">Algoritmo:</label>
                 <select id="algorithm">
+                    <option value="MD5">MD5 (não recomendado)</option>
                     <option value="SHA256" selected>SHA256</option>
                     <option value="SHA512">SHA512</option>
                 </select>
+                <p class="tip">MD5 existe apenas para compatibilidade e não é recomendado para novas senhas.</p>
             </div>
 
             <button id="generateBtn">Gerar Senha</button>
@@ -61,7 +63,7 @@
             <h3>Como funciona?</h3>
             <p>
                 1. Você insere uma palavra-chave.<br>
-                2. O sistema gera um hash (SHA256 ou SHA512).<br>
+                2. O sistema gera um hash (SHA256 ou SHA512; MD5 está disponível mas não é recomendado).<br>
                 3. O processo se repete pelo número de iterações definido.<br>
                 4. O resultado final é cortado para o tamanho desejado.
             </p>

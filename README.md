@@ -4,7 +4,7 @@ Um gerador de senhas determinístico simples em Bash que cria hashes iterativos 
 
 ## Como funciona
 
-O script recebe uma palavra-chave, gera um hash (SHA256 ou SHA512), repete esse processo por um número definido de iterações para garantir entropia, e corta o resultado para um tamanho específico no final. Isso permite gerar senhas reproduzíveis (determinísticas) e seguras.
+O script recebe uma palavra-chave, gera um hash (MD5 - não recomendado, SHA256 ou SHA512), repete esse processo por um número definido de iterações para garantir entropia, e corta o resultado para um tamanho específico no final. Isso permite gerar senhas reproduzíveis (determinísticas) e seguras.
 
 ## Uso
 
@@ -15,7 +15,7 @@ O script recebe uma palavra-chave, gera um hash (SHA256 ou SHA512), repete esse 
 ### Parâmetros (Flags)
 
 *   `-p <palavra>`: **Obrigatório.** A string inicial (seed/senha mestra).
-*   `-a <algo>`: **Obrigatório.** O algoritmo de hash a ser utilizado (`sha256`, `sha512`).
+*   `-a <algo>`: **Obrigatório.** O algoritmo de hash a ser utilizado (`md5` - não recomendado, `sha256`, `sha512`).
 *   `-c <num>`: O comprimento desejado da senha final. **Opcional.** Se omitido, o hash completo será retornado.
 *   `-i <num>`: Quantas vezes o processo de hash será repetido (mais iterações = mais demora = mais seguro contra força bruta). **Opcional.** Padrão: `1`.
 *   `-s <texto>`: Um salt/identificador do serviço (ex.: `github`, `gmail`) concatenado à palavra-chave antes do hashing. **Opcional**, mas recomendado para evitar reutilizar a mesma senha base em serviços diferentes.
@@ -40,10 +40,16 @@ Gerar o hash completo (sem corte), com 1 iteração (padrão) usando SHA512:
 ./amnesiapassgen.sh -p "umaoutrasenha" -a sha512 -s "meuservico"
 ```
 
+Gerar uma senha curta com MD5 (apenas para compatibilidade; não recomendado):
+
+```bash
+./amnesiapassgen.sh -p "legacy" -a md5 -c 16 -i 1
+```
+
 ## Requisitos
 
 *   Bash
-*   Coreutils (sha256sum, sha512sum)
+*   Coreutils (md5sum, sha256sum, sha512sum)
 
 ## Boas práticas e sugestões de uso
 
