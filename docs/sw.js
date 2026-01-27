@@ -1,4 +1,4 @@
-const CACHE_NAME = "apg-static-v1";
+const CACHE_NAME = "apg-static-v2";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
@@ -9,6 +9,7 @@ const STATIC_ASSETS = [
   "./almeida-logo.png",
   "./manifest.json"
 ];
+const HTML_REQUEST = "./index.html";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -30,22 +31,41 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
+  const url = new URL(request.url);
 
-  if (request.mode === "navigate") {
+  if (request.mode === "navigate" || request.headers.get("accept")?.includes("text/html")) {
     event.respondWith(
-      fetch(request).catch(() => caches.match("./index.html"))
+      fetch(request)
+        .then((response) => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(HTML_REQUEST, responseClone));
+          return response;
+        })
+        .catch(() => caches.match(HTML_REQUEST))
     );
     return;
   }
 
   event.respondWith(
     caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request).then((response) => {
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
-        return response;
-      });
+      if (cached) {
+        if (request.method === "GET" && url.origin === self.location.origin) {
+          fetch(request)
+            .then((response) => {
+              const responseClone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+            })
+            .catch(() => {});
+        }
+        return cached;
+      }
+      return fetch(request)
+        .then((response) => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+          return response;
+        })
+        .catch(() => cached);
     })
   );
 });
