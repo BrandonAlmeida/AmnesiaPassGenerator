@@ -122,6 +122,13 @@ button:hover {
     background-color: #0056b3;
 }
 
+.install-hint {
+    margin: 8px 0 0;
+    font-size: 0.85em;
+    color: #5f6b7a;
+    text-align: center;
+}
+
 textarea {
     resize: vertical;
     min-height: 60px;

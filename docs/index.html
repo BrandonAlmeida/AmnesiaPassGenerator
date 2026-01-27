@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amnesia Pass Generator</title>
+    <meta name="theme-color" content="#10b981">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="Amnesia-Logo_192.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="Amnesia-Logo_192.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -45,6 +49,7 @@
             </div>
 
             <button id="generateBtn">Gerar Senha</button>
+            <p class="install-hint">Dica: instale o app para uso offline (menu do navegador → Instalar app).</p>
 
             <div class="output-group">
                 <label for="result">Senha Gerada:</label>
@@ -94,8 +99,8 @@
         </div>
     </div>
 
-    <!-- Inclui a biblioteca crypto-js via CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <!-- Inclui a biblioteca crypto-js localmente para suporte offline -->
+    <script src="crypto-js.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -67,3 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
         resultTextarea.value = finalResult;
     }
 });
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+    });
+}
