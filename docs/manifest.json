@@ -2,6 +2,7 @@
   "name": "Amnesia Pass Generator",
   "short_name": "AmnesiaPass",
   "description": "Gerador de senhas deterministico que roda localmente no navegador.",
+  "id": "./?source=pwa",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,9 +10,15 @@
   "theme_color": "#10b981",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "Amnesia-Logo_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "Amnesia-Logo_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any"
     }
   ]
