@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const serviceInput = document.getElementById('service');
     const numCharsInput = document.getElementById('numChars');
     const iterationsInput = document.getElementById('iterations');
+    const prefixInput = document.getElementById('prefix');
+    const suffixInput = document.getElementById('suffix');
     const algorithmSelect = document.getElementById('algorithm');
     const generateBtn = document.getElementById('generateBtn');
     const resultInput = document.getElementById('result');
@@ -34,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const service = serviceInput.value;
         let numChars = parseInt(numCharsInput.value);
         let iterations = parseInt(iterationsInput.value);
+        const prefix = prefixInput.value || '';
+        const suffix = suffixInput.value || '';
         const algorithm = algorithmSelect.value;
 
         // Validação básica
@@ -84,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             finalResult = currentHash.substring(0, numChars);
         }
 
-        resultInput.value = finalResult;
+        resultInput.value = `${prefix}${finalResult}${suffix}`;
     }
 
     function toggleVisibility(button) {

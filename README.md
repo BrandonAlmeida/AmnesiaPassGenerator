@@ -10,7 +10,7 @@ O script recebe uma palavra-chave, gera um hash (MD5 - não recomendado, SHA256 
 ## Uso
 
 ```bash
-./amnesiapassgen.sh -p <palavra_chave> -a <algoritmo> [-c <num_caracteres>] [-i <num_iteracoes>] [-s <salt_servico>]
+./amnesiapassgen.sh -p <palavra_chave> -a <algoritmo> [-c <num_caracteres>] [-i <num_iteracoes>] [-s <salt_servico>] [-x <prefixo>] [-y <sufixo>]
 ```
 
 ### Parâmetros (Flags)
@@ -20,13 +20,15 @@ O script recebe uma palavra-chave, gera um hash (MD5 - não recomendado, SHA256 
 *   `-c <num>`: O comprimento desejado da senha final. **Opcional.** Se omitido, o hash completo será retornado.
 *   `-i <num>`: Quantas vezes o processo de hash será repetido (mais iterações = mais demora = mais seguro contra força bruta). **Opcional.** Padrão: `1`.
 *   `-s <texto>`: Um salt/identificador do serviço (ex.: `github`, `gmail`) concatenado à palavra-chave antes do hashing. **Opcional**, mas recomendado para evitar reutilizar a mesma senha base em serviços diferentes.
+*   `-x <texto>`: Prefixo **opcional** adicionado ao resultado final.
+*   `-y <texto>`: Sufixo **opcional** adicionado ao resultado final.
 
 ## Exemplos
 
 Gerar uma senha de 10 caracteres, com 5 iterações usando SHA256:
 
 ```bash
-./amnesiapassgen.sh -p "minhasenhasecreta" -a sha256 -c 10 -i 5 -s "github"
+./amnesiapassgen.sh -p "minhasenhasecreta" -a sha256 -c 10 -i 5 -s "github" -x "#meunome" -y "#sobrenome"
 ```
 
 Gerar uma senha de 32 caracteres, com 1 iteração usando SHA512:

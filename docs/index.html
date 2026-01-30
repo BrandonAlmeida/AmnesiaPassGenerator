@@ -51,6 +51,22 @@
             </div>
 
             <div class="input-group">
+                <label for="prefix">Prefixo (opcional):</label>
+                <div class="field-with-toggle">
+                    <input type="password" id="prefix" placeholder="Ex.: #meunome" autocomplete="off" autocapitalize="off" spellcheck="false">
+                    <button type="button" class="toggle-btn" data-target="prefix" aria-label="Mostrar/ocultar prefixo"></button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="suffix">Sufixo (opcional):</label>
+                <div class="field-with-toggle">
+                    <input type="password" id="suffix" placeholder="Ex.: #sobrenome" autocomplete="off" autocapitalize="off" spellcheck="false">
+                    <button type="button" class="toggle-btn" data-target="suffix" aria-label="Mostrar/ocultar sufixo"></button>
+                </div>
+            </div>
+
+            <div class="input-group">
                 <label for="algorithm">Algoritmo:</label>
                 <select id="algorithm">
                     <option value="MD5">MD5 (não recomendado)</option>
@@ -85,7 +101,8 @@
                 1. Você insere uma palavra-chave.<br>
                 2. O sistema gera um hash (SHA256 ou SHA512; MD5 está disponível mas não é recomendado).<br>
                 3. O processo se repete pelo número de iterações definido.<br>
-                4. O resultado final é cortado para o tamanho desejado.
+                4. O resultado final é cortado para o tamanho desejado.<br>
+                5. Prefixo e sufixo (se informados) são adicionados ao resultado final.
             </p>
 
             <h3>Segurança e Privacidade</h3>
@@ -102,8 +119,8 @@
 
             <h3>Dica de Uso</h3>
             <p class="tip">
-                Combine o resultado hexadecimal gerado aqui com um prefixo pessoal para adicionar caracteres especiais e letras maiúsculas.<br>
-                Exemplo: <code>MinhaSenh@.</code> + <code>[hash gerado]</code>
+                Use os campos de Prefixo e Sufixo para adicionar caracteres especiais e letras maiúsculas sem alterar o hash base.<br>
+                Exemplo: <code>#MeuPrefixo</code> + <code>[hash gerado]</code> + <code>#MeuSufixo</code>
             </p>
 
             <h3>Boas práticas</h3>
