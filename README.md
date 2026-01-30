@@ -82,4 +82,8 @@ A aplicação web está em `docs/` e pode ser publicada no GitHub Pages. Ela é 
 ## Boas práticas e sugestões de uso
 
 1. Use uma seed/senha mestra forte (frase longa e não óbvia) e um salt por serviço para evitar reutilização direta.
-2. Ao usar o script, cuide para não expor a seed/salt no histórico do terminal ou em clipboards; prefira limpar o histórico sensível e evitar colar em apps não confiáveis.
+2. Ao usar o script, cuide para não expor a seed/salt no histórico do terminal ou em clipboards; evite colar em apps não confiáveis.
+3. Para não gravar o comando no histórico do Bash, use `HISTCONTROL=ignoreboth` no `~/.bashrc` e execute com um espaço no início:
+   ```bash
+    ./amnesiapassgen.sh -p "seed" -a sha256 -c 12 -i 5 -s "github"
+   ```
