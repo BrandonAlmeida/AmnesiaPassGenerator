@@ -98,4 +98,6 @@ else
     FINAL_RESULT=$(echo "$CURRENT_VAL" | cut -c 1-$NUM_CHARS)
 fi
 
-echo "${PREFIX}${FINAL_RESULT}${SUFFIX}"
+FINAL_OUTPUT="${PREFIX}${FINAL_RESULT}${SUFFIX}"
+echo "Passwd: ${FINAL_OUTPUT}"
+echo "Length: ${#FINAL_OUTPUT}"

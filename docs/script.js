@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const algorithmSelect = document.getElementById('algorithm');
     const generateBtn = document.getElementById('generateBtn');
     const resultInput = document.getElementById('result');
+    const resultLengthHint = document.getElementById('resultLengthHint');
     const toggleButtons = document.querySelectorAll('.toggle-btn');
 
     const eyeIcon = `
@@ -89,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         resultInput.value = `${prefix}${finalResult}${suffix}`;
+        updateResultLengthHint();
     }
 
     function toggleVisibility(button) {
@@ -100,6 +102,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const isHidden = target.getAttribute('type') === 'password';
         target.setAttribute('type', isHidden ? 'text' : 'password');
         button.innerHTML = isHidden ? eyeIcon : eyeSlashIcon;
+        if (targetId === 'result') {
+            updateResultLengthHint();
+        }
+    }
+
+    function updateResultLengthHint() {
+        if (!resultLengthHint) {
+            return;
+        }
+        const isResultVisible = resultInput.getAttribute('type') === 'text';
+        if (isResultVisible && resultInput.value) {
+            resultLengthHint.textContent = `Total de caracteres: ${resultInput.value.length}`;
+            resultLengthHint.style.display = 'block';
+            return;
+        }
+        resultLengthHint.textContent = '';
+        resultLengthHint.style.display = 'none';
     }
 });
 
