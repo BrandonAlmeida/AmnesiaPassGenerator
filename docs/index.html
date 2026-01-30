@@ -53,7 +53,7 @@
             <div class="input-group">
                 <label for="prefix">Prefixo (opcional):</label>
                 <div class="field-with-toggle">
-                    <input type="password" id="prefix" placeholder="Ex.: #meunome" autocomplete="off" autocapitalize="off" spellcheck="false">
+                    <input type="password" id="prefix" placeholder="Ex.: #MeuPrefixo" autocomplete="off" autocapitalize="off" spellcheck="false">
                     <button type="button" class="toggle-btn" data-target="prefix" aria-label="Mostrar/ocultar prefixo"></button>
                 </div>
             </div>
@@ -61,7 +61,7 @@
             <div class="input-group">
                 <label for="suffix">Sufixo (opcional):</label>
                 <div class="field-with-toggle">
-                    <input type="password" id="suffix" placeholder="Ex.: #sobrenome" autocomplete="off" autocapitalize="off" spellcheck="false">
+                    <input type="password" id="suffix" placeholder="Ex.: #MeuSufixo" autocomplete="off" autocapitalize="off" spellcheck="false">
                     <button type="button" class="toggle-btn" data-target="suffix" aria-label="Mostrar/ocultar sufixo"></button>
                 </div>
             </div>
@@ -85,6 +85,7 @@
                     <input type="password" id="result" class="result-field" readonly>
                     <button type="button" class="toggle-btn" data-target="result" aria-label="Mostrar/ocultar senha gerada"></button>
                 </div>
+                <button type="button" class="copy-btn copy-btn-below" id="copyResultBtn" aria-label="Copiar senha gerada">Copiar</button>
                 <p id="resultLengthHint" class="install-hint" style="display: none;"></p>
             </div>
         </div>

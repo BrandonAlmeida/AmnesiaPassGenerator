@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generateBtn');
     const resultInput = document.getElementById('result');
     const resultLengthHint = document.getElementById('resultLengthHint');
+    const copyResultBtn = document.getElementById('copyResultBtn');
     const toggleButtons = document.querySelectorAll('.toggle-btn');
 
     const eyeIcon = `
@@ -27,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     generateBtn.addEventListener('click', generatePassword);
+    if (copyResultBtn) {
+        copyResultBtn.addEventListener('click', copyResultToClipboard);
+    }
     toggleButtons.forEach((button) => {
         button.innerHTML = eyeSlashIcon;
         button.addEventListener('click', () => toggleVisibility(button));
@@ -91,6 +95,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultInput.value = `${prefix}${finalResult}${suffix}`;
         updateResultLengthHint();
+    }
+
+    async function copyResultToClipboard() {
+        const value = resultInput.value;
+        if (!value) {
+            alert('Gere uma senha antes de copiar.');
+            return;
+        }
+
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(value);
+            } else {
+                const previousType = resultInput.getAttribute('type');
+                resultInput.setAttribute('type', 'text');
+                resultInput.select();
+                document.execCommand('copy');
+                resultInput.setSelectionRange(0, 0);
+                resultInput.setAttribute('type', previousType);
+            }
+            showCopyFeedback();
+        } catch (err) {
+            alert('Não foi possível copiar. Copie manualmente.');
+        }
+    }
+
+    function showCopyFeedback() {
+        if (!copyResultBtn) {
+            return;
+        }
+        const originalText = copyResultBtn.textContent;
+        copyResultBtn.textContent = 'Copiado!';
+        copyResultBtn.disabled = true;
+        setTimeout(() => {
+            copyResultBtn.textContent = originalText;
+            copyResultBtn.disabled = false;
+        }, 1200);
     }
 
     function toggleVisibility(button) {
