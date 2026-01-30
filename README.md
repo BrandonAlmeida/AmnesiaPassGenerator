@@ -1,7 +1,7 @@
 # Amnesia Pass Generator
 
 Um gerador de senhas determinístico simples em Bash que cria hashes iterativos baseados em uma palavra-chave.
-Este repositório também inclui uma versão web em `docs/`, compatível com GitHub Pages e com suporte a PWA (uso offline).
+Este repositório também inclui uma versão web em `docs/`, compatível com GitHub Pages e com suporte a PWA (uso offline).  
 **GitHub Page:** [AmnesiaPassGenerator](https://brandonalmeida.github.io/AmnesiaPassGenerator)
 
 ## Como funciona
