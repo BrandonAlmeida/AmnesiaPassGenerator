@@ -5,9 +5,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const iterationsInput = document.getElementById('iterations');
     const algorithmSelect = document.getElementById('algorithm');
     const generateBtn = document.getElementById('generateBtn');
-    const resultTextarea = document.getElementById('result');
+    const resultInput = document.getElementById('result');
+    const toggleButtons = document.querySelectorAll('.toggle-btn');
+
+    const eyeIcon = `
+        <svg class="toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+    `;
+    const eyeSlashIcon = `
+        <svg class="toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 3l18 18"></path>
+            <path d="M10.5 10.5a3 3 0 0 0 4.2 4.2"></path>
+            <path d="M9.9 5.2A10.4 10.4 0 0 1 12 5c6 0 10 7 10 7a17.5 17.5 0 0 1-4.1 4.6"></path>
+            <path d="M6.1 6.1A17.5 17.5 0 0 0 2 12s4 7 10 7a10.4 10.4 0 0 0 4.2-.9"></path>
+        </svg>
+    `;
 
     generateBtn.addEventListener('click', generatePassword);
+    toggleButtons.forEach((button) => {
+        button.innerHTML = eyeSlashIcon;
+        button.addEventListener('click', () => toggleVisibility(button));
+    });
 
     function generatePassword() {
         const keyword = keywordInput.value;
@@ -64,7 +84,18 @@ document.addEventListener('DOMContentLoaded', () => {
             finalResult = currentHash.substring(0, numChars);
         }
 
-        resultTextarea.value = finalResult;
+        resultInput.value = finalResult;
+    }
+
+    function toggleVisibility(button) {
+        const targetId = button.getAttribute('data-target');
+        const target = document.getElementById(targetId);
+        if (!target) {
+            return;
+        }
+        const isHidden = target.getAttribute('type') === 'password';
+        target.setAttribute('type', isHidden ? 'text' : 'password');
+        button.innerHTML = isHidden ? eyeIcon : eyeSlashIcon;
     }
 });
 

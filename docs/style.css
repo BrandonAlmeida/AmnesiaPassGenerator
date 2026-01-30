@@ -86,6 +86,7 @@ label {
 
 input[type="text"],
 input[type="number"],
+input[type="password"],
 select,
 textarea {
     width: 100%;
@@ -132,6 +133,48 @@ button:hover {
 textarea {
     resize: vertical;
     min-height: 60px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-family: monospace;
+}
+
+.field-with-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.field-with-toggle input {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.toggle-btn {
+    width: auto;
+    padding: 8px 10px;
+    font-size: 16px;
+    background-color: #e9ecef;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.toggle-btn:hover {
+    background-color: #dce1e6;
+}
+
+.toggle-icon {
+    width: 18px;
+    height: 18px;
+    stroke: #333;
+    stroke-width: 2;
+    fill: none;
+    display: block;
+}
+
+.result-field {
     background-color: #f9f9f9;
     color: #333;
     font-family: monospace;
