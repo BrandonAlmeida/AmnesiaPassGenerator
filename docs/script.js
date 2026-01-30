@@ -108,16 +108,36 @@ document.addEventListener('DOMContentLoaded', () => {
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(value);
             } else {
-                const previousType = resultInput.getAttribute('type');
-                resultInput.setAttribute('type', 'text');
-                resultInput.select();
-                document.execCommand('copy');
-                resultInput.setSelectionRange(0, 0);
-                resultInput.setAttribute('type', previousType);
+                legacyCopy(value);
             }
             showCopyFeedback();
         } catch (err) {
-            alert('Não foi possível copiar. Copie manualmente.');
+            try {
+                legacyCopy(value);
+                showCopyFeedback();
+            } catch (fallbackErr) {
+                alert('Não foi possível copiar. Copie manualmente.');
+            }
+        }
+    }
+
+    function legacyCopy(value) {
+        const textarea = document.createElement('textarea');
+        textarea.value = value;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.top = '0';
+        textarea.style.left = '0';
+        textarea.style.opacity = '0';
+        textarea.style.pointerEvents = 'none';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        textarea.setSelectionRange(0, textarea.value.length);
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        if (!successful) {
+            throw new Error('copy failed');
         }
     }
 
