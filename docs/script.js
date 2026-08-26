@@ -75,6 +75,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyResultBtn = document.getElementById('copyResultBtn');
     const toggleButtons = document.querySelectorAll('.toggle-btn');
 
+    const seedBtn          = document.getElementById('seedBtn');
+    const seedDialog       = document.getElementById('seedDialog');
+    const seedInputField   = document.getElementById('seedInputField');
+    const loadSeedBtn      = document.getElementById('loadSeedBtn');
+    const seedLoadError    = document.getElementById('seedLoadError');
+    const generateSeedBtn  = document.getElementById('generateSeedBtn');
+    const seedOutputGroup  = document.getElementById('seedOutputGroup');
+    const seedOutput       = document.getElementById('seedOutput');
+    const copySeedBtn      = document.getElementById('copySeedBtn');
+    const closeSeedBtn     = document.getElementById('closeSeedBtn');
+
     const eyeIcon = `
         <svg class="toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"></path>
@@ -91,12 +102,85 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     generateBtn.addEventListener('click', generatePassword);
-    if (copyResultBtn) {
-        copyResultBtn.addEventListener('click', copyResultToClipboard);
-    }
+    if (copyResultBtn) copyResultBtn.addEventListener('click', copyResultToClipboard);
     toggleButtons.forEach((button) => {
         button.innerHTML = eyeSlashIcon;
         button.addEventListener('click', () => toggleVisibility(button));
+    });
+
+    // Seed modal
+    function syncGenerateSeedBtn() {
+        generateSeedBtn.disabled = !keywordInput.value;
+    }
+    keywordInput.addEventListener('input', syncGenerateSeedBtn);
+
+    seedBtn.addEventListener('click', () => {
+        seedLoadError.textContent = '';
+        seedInputField.value = '';
+        seedOutputGroup.style.display = 'none';
+        seedOutput.value = '';
+        syncGenerateSeedBtn();
+        seedDialog.showModal();
+    });
+
+    closeSeedBtn.addEventListener('click', () => seedDialog.close());
+    seedDialog.addEventListener('click', e => {
+        if (e.target === seedDialog) seedDialog.close();
+    });
+
+    loadSeedBtn.addEventListener('click', () => {
+        seedLoadError.textContent = '';
+        let raw = seedInputField.value.trim();
+        if (!raw) { seedLoadError.textContent = 'Cole uma seed antes de carregar.'; return; }
+        if (raw.startsWith('apg:')) raw = raw.slice(4);
+        try {
+            const json = new TextDecoder().decode(Uint8Array.from(atob(raw), c => c.charCodeAt(0)));
+            const d = JSON.parse(json);
+            if (d.u !== undefined) usernameInput.value = d.u;
+            if (d.w !== undefined) siteInput.value = d.w;
+            if (d.c !== undefined) numCharsInput.value = d.c;
+            if (d.i !== undefined) iterationsInput.value = d.i;
+            if (d.x !== undefined) prefixInput.value = d.x;
+            if (d.y !== undefined) suffixInput.value = d.y;
+            seedDialog.close();
+        } catch {
+            seedLoadError.textContent = 'Seed inválida.';
+        }
+    });
+
+    generateSeedBtn.addEventListener('click', () => {
+        const d = { a: 'sha512' };
+        const u = usernameInput.value;
+        const w = siteInput.value;
+        const c = numCharsInput.value;
+        const i = iterationsInput.value;
+        const x = prefixInput.value;
+        const y = suffixInput.value;
+        if (u) d.u = u;
+        if (w) d.w = w;
+        if (c) d.c = c;
+        if (i && i !== '1') d.i = i;
+        if (x) d.x = x;
+        if (y) d.y = y;
+        const bytes = new TextEncoder().encode(JSON.stringify(d));
+        const b64 = btoa(String.fromCharCode(...bytes));
+        seedOutput.value = 'apg:' + b64;
+        seedOutputGroup.style.display = 'block';
+    });
+
+    copySeedBtn.addEventListener('click', () => copyToClipboard(seedOutput.value, copySeedBtn));
+
+    // Limpar campos
+    document.getElementById('clearBtn').addEventListener('click', () => {
+        usernameInput.value = '';
+        siteInput.value = '';
+        numCharsInput.value = '';
+        iterationsInput.value = '1';
+        prefixInput.value = '';
+        suffixInput.value = '';
+        keywordInput.value = '';
+        resultInput.value = '';
+        updateResultLengthHint();
     });
 
     function generatePassword() {
@@ -141,28 +225,23 @@ document.addEventListener('DOMContentLoaded', () => {
         updateResultLengthHint();
     }
 
-    async function copyResultToClipboard() {
-        const value = resultInput.value;
-        if (!value) {
-            alert('Gere uma senha antes de copiar.');
-            return;
-        }
-
+    async function copyToClipboard(value, btn) {
+        if (!value) { alert('Nada para copiar.'); return; }
         try {
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(value);
             } else {
                 legacyCopy(value);
             }
-            showCopyFeedback();
-        } catch (err) {
-            try {
-                legacyCopy(value);
-                showCopyFeedback();
-            } catch (fallbackErr) {
-                alert('Não foi possível copiar. Copie manualmente.');
-            }
+            showCopyFeedback(btn);
+        } catch {
+            try { legacyCopy(value); showCopyFeedback(btn); }
+            catch { alert('Não foi possível copiar. Copie manualmente.'); }
         }
+    }
+
+    async function copyResultToClipboard() {
+        await copyToClipboard(resultInput.value || '', copyResultBtn);
     }
 
     function legacyCopy(value) {
@@ -185,16 +264,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showCopyFeedback() {
-        if (!copyResultBtn) {
-            return;
-        }
-        const originalText = copyResultBtn.textContent;
-        copyResultBtn.textContent = 'Copiado!';
-        copyResultBtn.disabled = true;
+    function showCopyFeedback(btn) {
+        if (!btn) return;
+        const originalText = btn.textContent;
+        btn.textContent = 'Copiado!';
+        btn.disabled = true;
         setTimeout(() => {
-            copyResultBtn.textContent = originalText;
-            copyResultBtn.disabled = false;
+            btn.textContent = originalText;
+            btn.disabled = false;
         }, 1200);
     }
 

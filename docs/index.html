@@ -133,6 +133,8 @@
 
                     <button class="btn-primary generate-btn" id="generateBtn" data-i18n="tool.btn.generate">Gerar Senha</button>
                     <button type="button" class="btn-secondary save-profile-btn" id="saveProfileBtn" data-i18n="tool.btn.save-profile">Salvar Perfil Atual</button>
+                    <button type="button" class="btn-secondary save-profile-btn" id="seedBtn" data-i18n="tool.btn.seed">Seed</button>
+                    <button type="button" class="btn-secondary save-profile-btn" id="clearBtn" data-i18n="tool.btn.clear">Limpar Campos</button>
                     <p class="install-hint" data-i18n="tool.hint.install">Dica: instale o app para uso offline (menu do navegador → Instalar app).</p>
 
                     <div class="output-group">
@@ -144,6 +146,7 @@
                         <button type="button" class="btn-secondary copy-btn" id="copyResultBtn" data-i18n="tool.btn.copy">Copiar</button>
                         <p id="resultLengthHint" class="field-hint" style="display: none;"></p>
                     </div>
+
                 </div>
 
                 <!-- Painel: Informações -->
@@ -254,6 +257,35 @@
         <div class="dialog-actions">
             <button type="button" class="btn-primary" id="confirmLoadProfileBtn" data-i18n="tool.modal.load.btn">Descriptografar e Carregar</button>
             <button type="button" class="btn-secondary" id="cancelLoadProfileBtn" data-i18n="tool.modal.load.cancel">Cancelar</button>
+        </div>
+    </dialog>
+
+    <!-- Modal: Seed -->
+    <dialog id="seedDialog" aria-labelledby="seedDialogTitle">
+        <h3 id="seedDialogTitle" data-i18n="tool.modal.seed.title">Seed</h3>
+
+        <div class="seed-section">
+            <label for="seedInputField" data-i18n="tool.modal.seed.input.label">Inserir Seed</label>
+            <p class="dialog-description" data-i18n="tool.modal.seed.input.description">Cole uma seed para preencher automaticamente os campos do formulário.</p>
+            <input type="text" id="seedInputField" placeholder="apg:..." autocomplete="off" spellcheck="false" style="width:100%;margin-top:0.5rem;">
+            <button type="button" class="btn-secondary seed-full-btn" id="loadSeedBtn" data-i18n="tool.modal.seed.input.btn">Carregar</button>
+            <p id="seedLoadError" class="dialog-error" role="alert"></p>
+        </div>
+
+        <hr class="seed-divider">
+
+        <div class="seed-section">
+            <label data-i18n="tool.modal.seed.generate.label">Gerar Seed</label>
+            <p class="dialog-description" data-i18n="tool.modal.seed.generate.description">Gera uma seed com as configurações atuais (sem a palavra-chave). Armazene no cofre no lugar da senha.</p>
+            <button type="button" class="btn-secondary seed-full-btn" id="generateSeedBtn" disabled data-i18n="tool.modal.seed.generate.btn">Gerar</button>
+            <div id="seedOutputGroup" style="display:none" class="seed-output">
+                <input type="text" id="seedOutput" class="result-field" readonly>
+                <button type="button" class="btn-secondary copy-btn" id="copySeedBtn" data-i18n="tool.modal.seed.generate.copy">Copiar Seed</button>
+            </div>
+        </div>
+
+        <div class="dialog-actions">
+            <button type="button" class="btn-secondary" id="closeSeedBtn" data-i18n="tool.modal.seed.close">Fechar</button>
         </div>
     </dialog>
 

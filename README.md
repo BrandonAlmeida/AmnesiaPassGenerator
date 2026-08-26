@@ -26,7 +26,7 @@ O processo é determinístico: os mesmos parâmetros sempre produzem a mesma sa�
 ## CLI — Uso
 
 ```bash
-./amnesiapassgen.sh -p <palavra_chave> -a sha512 [-c <num_caracteres>] [-i <num_iteracoes>] [-s <salt_servico>] [-x <prefixo>] [-y <sufixo>]
+./amnesiapassgen.sh -p <palavra_chave> [-c <num_caracteres>] [-i <num_iteracoes>] [-u <username>] [-w <site>] [-x <prefixo>] [-y <sufixo>] [-R]
 ```
 
 ### Parâmetros
@@ -34,32 +34,57 @@ O processo é determinístico: os mesmos parâmetros sempre produzem a mesma sa�
 | Flag | Descrição | Obrigatório |
 |------|-----------|-------------|
 | `-p` | Palavra-chave (seed mestra) | Sim |
-| `-a` | Algoritmo — apenas `sha512` | Sim |
-| `-c` | Comprimento da senha final em caracteres — máximo 128 (sem valor = hash completo de 128 caracteres) | Não |
+| `-c` | Comprimento da senha em caracteres — máximo 128 (sem valor = hash completo de 128 caracteres) | Não |
 | `-i` | Número de iterações (padrão: `1`) | Não |
-| `-s` | Salt / identificador do serviço (ex.: `github`, `gmail`) | Não |
+| `-u` | Username ou e-mail (combinado com `-w` forma o salt) | Não |
+| `-w` | Site ou aplicativo (combinado com `-u` forma o salt) | Não |
 | `-x` | Prefixo adicionado ao resultado final | Não |
 | `-y` | Sufixo adicionado ao resultado final | Não |
+| `-R` | Gera e exibe a receita (string base64) junto com a senha | Não |
 
 ### Exemplos
 
-Senha de 40 caracteres com 10 iterações e salt de serviço:
+Senha de 40 caracteres com 10 iterações:
 
 ```bash
-./amnesiapassgen.sh -p "minhasenhasecreta" -a sha512 -c 40 -i 10 -s "github" -x "#T" -y "#"
+./amnesiapassgen.sh -p "minhasenhasecreta" -c 40 -i 10 -u usuario@gmail.com -w github -x "#T" -y "#"
 ```
 
 Hash completo (sem truncamento), iteração padrão:
 
 ```bash
-./amnesiapassgen.sh -p "minhasenhasecreta" -a sha512 -s "email"
+./amnesiapassgen.sh -p "minhasenhasecreta" -u usuario@gmail.com -w email
 ```
 
 Para não gravar a palavra-chave no histórico do Bash (`HISTCONTROL=ignoreboth` no `~/.bashrc`), inicie o comando com um espaço:
 
 ```bash
- ./amnesiapassgen.sh -p "minhasenhasecreta" -c 32 -i 5 -s "banco"
+ ./amnesiapassgen.sh -p "minhasenhasecreta" -c 32 -i 5 -u usuario@banco.com -w banco
 ```
+
+### Receitas (seed para o cofre)
+
+Uma receita é uma string base64 que codifica todos os parâmetros **exceto a palavra-chave**. Armazene-a no campo de senha do cofre — se o cofre vazar, o atacante tem a receita mas não consegue derivar a senha sem a palavra-chave, que fica só na sua cabeça.
+
+**Gerar receita junto com a senha:**
+
+```bash
+./amnesiapassgen.sh -p "minhasenhasecreta" -u usuario@gmail.com -w github -c 32 -i 5 -R
+```
+
+```
+Passwd: 3a9f...c12e
+Length: 32
+Receita: apg:eyJhIjoic2hhNTEyIiwidSI6InVzdWFyaW9AZ21haWwuY29tIiwidyI6ImdpdGh1YiIsImMiOiIzMiIsImkiOiI1In0=
+```
+
+**Usar receita para gerar a senha** (o que você faz ao consultar o cofre):
+
+```bash
+./amnesiapassgen.sh -r "apg:eyJhIjoic2hhNT..." -p "minhasenhasecreta"
+```
+
+Flags CLI passadas junto com `-r` sobrepõem os valores da receita.
 
 ### Descriptografar perfis exportados da versão web
 
@@ -83,7 +108,8 @@ Saída de exemplo:
 
 ```
 Perfil 'GitHub' descriptografado com sucesso.
-  Salt/Serviço : github
+  Username     : usuario@gmail.com
+  Site         : github
   Caracteres   : 40
   Iterações    : 10
   Prefixo      : #T
@@ -101,7 +127,7 @@ Length: 44
 
 - Bash
 - Coreutils (`sha512sum`)
-- Python 3 + `pip install cryptography` *(somente para descriptografar perfis)*
+- Python 3 + `pip install cryptography` *(somente para descriptografar perfis e usar receitas)*
 
 ---
 
@@ -120,7 +146,7 @@ A aplicação web está em `docs/` e pode ser publicada no GitHub Pages. Funcion
 
 A versão web permite salvar e carregar configurações de senha (perfis) diretamente no `localStorage` do navegador, com criptografia de ponta a ponta.
 
-**O que é salvo:** palavra-chave, salt, número de caracteres, iterações, prefixo, sufixo — tudo cifrado. Nenhum dado sensível fica em texto claro no armazenamento.
+**O que é salvo:** palavra-chave, username, site, número de caracteres, iterações, prefixo, sufixo — tudo cifrado. Nenhum dado sensível fica em texto claro no armazenamento.
 
 **Criptografia usada:**
 - Derivação de chave: **PBKDF2** (SHA-256, 200.000 iterações, salt aleatório de 16 bytes por perfil)
@@ -156,6 +182,7 @@ Os perfis podem ser exportados para um arquivo `.json` (os blobs permanecem cifr
 ## Boas práticas
 
 - Use uma palavra-chave longa e não óbvia (frase completa, não uma palavra).
-- Use um salt diferente para cada serviço — evita que a mesma senha base seja reutilizada diretamente.
+- Use um username e site diferentes para cada serviço — evita que a mesma senha base seja reutilizada diretamente.
+- Para uso com cofre de senhas: gere uma receita (`-R`) e armazene-a no cofre no lugar da senha — mesmo que o cofre vaze, a senha não pode ser derivada sem a palavra-chave.
 - A palavra-chave é o ponto único de falha: se for descoberta, todas as senhas derivadas ficam expostas.
 - Ao usar o CLI, evite expor a palavra-chave no histórico do terminal ou em clipboards de apps não confiáveis.

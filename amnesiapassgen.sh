@@ -12,9 +12,11 @@ SUFFIX=""
 DECRYPT_MODE=false
 JSON_FILE=""
 PROFILE_NAME=""
+RECIPE_STR=""
+GENERATE_RECIPE=false
 
 # Loop para processar as flags
-while getopts "c:i:a:p:u:w:x:y:df:n:" opt; do
+while getopts "c:i:a:p:u:w:x:y:df:n:r:R" opt; do
     case $opt in
         c) NUM_CHARS="$OPTARG" ;;
         i) ITERATIONS="$OPTARG" ;;
@@ -27,6 +29,8 @@ while getopts "c:i:a:p:u:w:x:y:df:n:" opt; do
         d) DECRYPT_MODE=true ;;
         f) JSON_FILE="$OPTARG" ;;
         n) PROFILE_NAME="$OPTARG" ;;
+        r) RECIPE_STR="$OPTARG" ;;
+        R) GENERATE_RECIPE=true ;;
         \?) echo "Opção inválida: -$OPTARG" >&2; exit 1 ;;
         :)  echo "A opção -$OPTARG requer um argumento." >&2; exit 1 ;;
     esac
@@ -149,26 +153,72 @@ PYEOF
 
 fi
 
+# ── Modo receita (carregar) ───────────────────────────────────────────────────
+
+if [ -n "$RECIPE_STR" ]; then
+
+    RECIPE_VARS=$(APG_RECIPE="$RECIPE_STR" python3 - <<'PYEOF'
+import json, base64, os, shlex, sys
+
+r = os.environ['APG_RECIPE']
+if r.startswith('apg:'):
+    r = r[4:]
+# Padding tolerante
+r += '=='
+try:
+    d = json.loads(base64.b64decode(r).decode('utf-8'))
+except Exception as e:
+    print(f"Erro ao decodificar receita: {e}", file=sys.stderr)
+    sys.exit(1)
+
+print(f"R_ALGO={shlex.quote(d.get('a', 'sha512'))}")
+print(f"R_USERNAME={shlex.quote(d.get('u', ''))}")
+print(f"R_SITE={shlex.quote(d.get('w', ''))}")
+print(f"R_NUM_CHARS={shlex.quote(str(d.get('c', '')))}")
+print(f"R_ITERATIONS={shlex.quote(str(d.get('i', '1')))}")
+print(f"R_PREFIX={shlex.quote(d.get('x', ''))}")
+print(f"R_SUFFIX={shlex.quote(d.get('y', ''))}")
+PYEOF
+    )
+
+    [ $? -ne 0 ] && exit 1
+    eval "$RECIPE_VARS"
+
+    # Flags CLI sobrepõem a receita
+    ALGO="${ALGO:-$R_ALGO}"
+    USERNAME="${USERNAME:-$R_USERNAME}"
+    SITE="${SITE:-$R_SITE}"
+    NUM_CHARS="${NUM_CHARS:-$R_NUM_CHARS}"
+    ITERATIONS="${ITERATIONS:-$R_ITERATIONS}"
+    PREFIX="${PREFIX:-$R_PREFIX}"
+    SUFFIX="${SUFFIX:-$R_SUFFIX}"
+
+fi
+
 # ── Modo geração de senha ─────────────────────────────────────────────────────
 
 ITERATIONS=${ITERATIONS:-1}
 ALGO=${ALGO:-sha512}
 
 if [ -z "$KEYWORD" ]; then
-    echo "Uso: $0 -p <palavra_chave> [-a sha512] [-c <num_caracteres>] [-i <num_iteracoes>] [-u <username>] [-w <site>] [-x <prefixo>] [-y <sufixo>]"
+    echo "Uso: $0 -p <palavra_chave> [-c <num_caracteres>] [-i <num_iteracoes>] [-u <username>] [-w <site>] [-x <prefixo>] [-y <sufixo>] [-R]"
     echo "  -p: Palavra-chave (seed) para gerar a senha (obrigatório)"
-    echo "  -a: Algoritmo de hash (opcional, padrão: sha512)"
     echo "  -c: Número de caracteres, máximo 128 (opcional, se omitido retorna o hash completo de 128 caracteres)"
     echo "  -i: Número de iterações (opcional, padrão: 1)"
     echo "  -u: Username ou e-mail (opcional, combinado com -w forma o salt)"
     echo "  -w: Site ou aplicativo (opcional, combinado com -u forma o salt)"
     echo "  -x: Prefixo (opcional) adicionado ao resultado final"
     echo "  -y: Sufixo (opcional) adicionado ao resultado final"
+    echo "  -R: Gera e exibe a receita (string base64) junto com a senha"
+    echo ""
+    echo "Usar receita:"
+    echo "  $0 -r <receita> -p <palavra_chave>"
+    echo "  (flags adicionais sobrepõem os valores da receita)"
     echo ""
     echo "Modo descriptografar:"
     echo "  $0 -d -f <arquivo.json> -n <nome_perfil> -p <palavra_chave>"
     echo ""
-    echo "Exemplo: $0 -p minha_senha -c 10 -i 5 -u usuario@gmail.com -w gmail -x '#meu' -y '#sobrenome'"
+    echo "Exemplo: $0 -p minha_senha -c 10 -i 5 -u usuario@gmail.com -w gmail -x '#meu' -y '#sobrenome' -R"
     exit 1
 fi
 
@@ -200,3 +250,28 @@ fi
 FINAL_OUTPUT="${PREFIX}${FINAL_RESULT}${SUFFIX}"
 echo "Passwd: ${FINAL_OUTPUT}"
 echo "Length: ${#FINAL_OUTPUT}"
+
+if [ "$GENERATE_RECIPE" = true ]; then
+    RECIPE=$(APG_ALGO="$ALGO" APG_USERNAME="$USERNAME" APG_SITE="$SITE" \
+             APG_NUM_CHARS="$NUM_CHARS" APG_ITERATIONS="$ITERATIONS" \
+             APG_PREFIX="$PREFIX" APG_SUFFIX="$SUFFIX" python3 - <<'PYEOF'
+import json, base64, os
+
+d = {'a': os.environ.get('APG_ALGO', 'sha512')}
+u = os.environ.get('APG_USERNAME', '')
+w = os.environ.get('APG_SITE', '')
+c = os.environ.get('APG_NUM_CHARS', '')
+i = os.environ.get('APG_ITERATIONS', '1')
+x = os.environ.get('APG_PREFIX', '')
+y = os.environ.get('APG_SUFFIX', '')
+if u: d['u'] = u
+if w: d['w'] = w
+if c: d['c'] = c
+if i and i != '1': d['i'] = i
+if x: d['x'] = x
+if y: d['y'] = y
+print('apg:' + base64.b64encode(json.dumps(d, separators=(',',':')).encode('utf-8')).decode())
+PYEOF
+    )
+    echo "Receita: $RECIPE"
+fi

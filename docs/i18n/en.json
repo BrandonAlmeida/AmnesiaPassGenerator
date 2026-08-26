@@ -12,9 +12,11 @@
   "tool.label.prefix":             "Prefix",
   "tool.label.suffix":             "Suffix",
   "tool.label.profiles":           "Saved Profiles",
-  "tool.label.result":             "Generated Password",
+  "tool.label.result": "Generated Password",
 
-  "tool.btn.load":         "Load",
+  "tool.btn.load":  "Load",
+  "tool.btn.seed":  "Seed",
+  "tool.btn.clear": "Clear Fields",
   "tool.btn.delete":       "Delete",
   "tool.btn.export":       "Export",
   "tool.btn.import":       "Import",
@@ -60,5 +62,15 @@
   "tool.modal.load.description": "Enter the Keyword used when saving this profile to decrypt it.",
   "tool.modal.load.label":       "Keyword",
   "tool.modal.load.btn":         "Decrypt and Load",
-  "tool.modal.load.cancel":      "Cancel"
+  "tool.modal.load.cancel":      "Cancel",
+
+  "tool.modal.seed.title":                 "Seed",
+  "tool.modal.seed.input.label":           "Insert Seed",
+  "tool.modal.seed.input.description":     "Paste a seed to automatically fill in the form fields.",
+  "tool.modal.seed.input.btn":             "Load",
+  "tool.modal.seed.generate.label":        "Generate Seed",
+  "tool.modal.seed.generate.description":  "Generates a seed from the current settings (without the keyword). Store it in your vault instead of the password.",
+  "tool.modal.seed.generate.btn":          "Generate",
+  "tool.modal.seed.generate.copy":         "Copy Seed",
+  "tool.modal.seed.close":                 "Close"
 }

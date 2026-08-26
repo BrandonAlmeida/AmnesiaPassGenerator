@@ -12,9 +12,11 @@
   "tool.label.prefix":             "Prefixo",
   "tool.label.suffix":             "Sufixo",
   "tool.label.profiles":           "Perfis Salvos",
-  "tool.label.result":             "Senha Gerada",
+  "tool.label.result": "Senha Gerada",
 
-  "tool.btn.load":         "Carregar",
+  "tool.btn.load":  "Carregar",
+  "tool.btn.seed":  "Seed",
+  "tool.btn.clear": "Limpar Campos",
   "tool.btn.delete":       "Excluir",
   "tool.btn.export":       "Exportar",
   "tool.btn.import":       "Importar",
@@ -60,5 +62,15 @@
   "tool.modal.load.description": "Insira a Palavra-Chave usada ao salvar este perfil para descriptografá-lo.",
   "tool.modal.load.label":       "Palavra-Chave",
   "tool.modal.load.btn":         "Descriptografar e Carregar",
-  "tool.modal.load.cancel":      "Cancelar"
+  "tool.modal.load.cancel":      "Cancelar",
+
+  "tool.modal.seed.title":                 "Seed",
+  "tool.modal.seed.input.label":           "Inserir Seed",
+  "tool.modal.seed.input.description":     "Cole uma seed para preencher automaticamente os campos do formulário.",
+  "tool.modal.seed.input.btn":             "Carregar",
+  "tool.modal.seed.generate.label":        "Gerar Seed",
+  "tool.modal.seed.generate.description":  "Gera uma seed com as configurações atuais (sem a palavra-chave). Armazene no cofre no lugar da senha.",
+  "tool.modal.seed.generate.btn":          "Gerar",
+  "tool.modal.seed.generate.copy":         "Copiar Seed",
+  "tool.modal.seed.close":                 "Fechar"
 }
