@@ -1,11 +1,12 @@
 {
   "tool.name":             "Amnesia Pass Generator",
-  "tool.hero.description": "Gerador de senhas determinístico baseado em hash. Insira uma palavra-chave e um salt por serviço — a mesma senha é sempre recriada sem precisar armazená-la em lugar nenhum.",
+  "tool.hero.description": "Gerador de senhas determinístico baseado em hash. Insira uma palavra-chave, seu username e o site — a mesma senha é sempre recriada sem precisar armazená-la em lugar nenhum.",
   "tool.hero.cta":         "Ver no GitHub",
 
   "tool.label.keyword":            "Palavra-Chave",
-  "tool.label.service":            "Salt / Serviço",
-  "tool.label.numchars":           "Número de Caracteres",
+  "tool.label.username":           "Username / E-mail",
+  "tool.label.site":               "Site / Aplicativo",
+  "tool.label.numchars":           "Número de Caracteres (máx. 128)",
   "tool.label.iterations":         "Iterações",
   "tool.label.iterations.default": "(padrão: 1)",
   "tool.label.prefix":             "Prefixo",
@@ -24,11 +25,11 @@
   "tool.hint.install": "Dica: instale o app para uso offline (menu do navegador → Instalar app).",
 
   "tool.card.how.title": "Como funciona",
-  "tool.card.how.body":  "O Amnesia Pass Generator é determinístico: insira sempre a mesma palavra-chave e o mesmo salt e a mesma senha será recriada — sem banco de dados, sem nuvem.",
-  "tool.card.how.step1": "Insira a palavra-chave e, opcionalmente, um salt por serviço.",
+  "tool.card.how.body":  "O Amnesia Pass Generator é determinístico: insira sempre a mesma palavra-chave, username e site e a mesma senha será recriada — sem banco de dados, sem nuvem.",
+  "tool.card.how.step1": "Insira a palavra-chave e, opcionalmente, username/e-mail e site/aplicativo.",
   "tool.card.how.step2": "O sistema gera um hash SHA512 da entrada.",
   "tool.card.how.step3": "O processo se repete pelo número de iterações definido.",
-  "tool.card.how.step4": "O resultado é truncado para o número de caracteres desejado.",
+  "tool.card.how.step4": "O resultado é truncado para o número de caracteres desejado (máximo 128, pois SHA512 produz um hash hexadecimal de 128 caracteres).",
   "tool.card.how.step5": "Prefixo e sufixo são adicionados ao resultado final.",
 
   "tool.card.profiles.title":         "Perfis Salvos",
@@ -47,7 +48,7 @@
 
   "tool.card.tip.title":  "Dica de Uso",
   "tool.card.tip.body":   "Use prefixo e sufixo para adicionar caracteres especiais e maiúsculas sem alterar o hash base.",
-  "tool.card.tip.footer": "Use uma seed mestra forte (frase longa) e um salt diferente para cada serviço.",
+  "tool.card.tip.footer": "Use uma seed mestra forte (frase longa) e um username/site diferente para cada serviço.",
 
   "tool.modal.save.title":       "Salvar Perfil",
   "tool.modal.save.description": "Dê um nome para identificar esta configuração. A Palavra-Chave não é armazenada — ela será usada apenas para criptografar os demais campos.",

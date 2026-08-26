@@ -5,7 +5,8 @@ NUM_CHARS=""
 ITERATIONS=""
 ALGO=""
 KEYWORD=""
-SALT=""
+USERNAME=""
+SITE=""
 PREFIX=""
 SUFFIX=""
 DECRYPT_MODE=false
@@ -13,13 +14,14 @@ JSON_FILE=""
 PROFILE_NAME=""
 
 # Loop para processar as flags
-while getopts "c:i:a:p:s:x:y:df:n:" opt; do
+while getopts "c:i:a:p:u:w:x:y:df:n:" opt; do
     case $opt in
         c) NUM_CHARS="$OPTARG" ;;
         i) ITERATIONS="$OPTARG" ;;
         a) ALGO="$OPTARG" ;;
         p) KEYWORD="$OPTARG" ;;
-        s) SALT="$OPTARG" ;;
+        u) USERNAME="$OPTARG" ;;
+        w) SITE="$OPTARG" ;;
         x) PREFIX="$OPTARG" ;;
         y) SUFFIX="$OPTARG" ;;
         d) DECRYPT_MODE=true ;;
@@ -113,7 +115,8 @@ except Exception:
 
 data = json.loads(plain.decode('utf-8'))
 print(f"P_KEYWORD={shlex.quote(data.get('keyword', ''))}")
-print(f"P_SERVICE={shlex.quote(data.get('service', ''))}")
+print(f"P_USERNAME={shlex.quote(data.get('username', ''))}")
+print(f"P_SITE={shlex.quote(data.get('site', ''))}")
 print(f"P_NUM_CHARS={shlex.quote(str(data.get('numChars', '')))}")
 print(f"P_ITERATIONS={shlex.quote(str(data.get('iterations', '1')))}")
 print(f"P_PREFIX={shlex.quote(data.get('prefix', ''))}")
@@ -125,9 +128,10 @@ PYEOF
 
     eval "$PROFILE_VARS"
 
-    # Flags CLI sobrepõem o perfil; keyword e salt vêm do perfil
+    # Flags CLI sobrepõem o perfil; keyword, username e site vêm do perfil
     KEYWORD="${P_KEYWORD:-$KEYWORD}"
-    SALT="${P_SERVICE}"
+    USERNAME="${USERNAME:-$P_USERNAME}"
+    SITE="${SITE:-$P_SITE}"
     NUM_CHARS="${NUM_CHARS:-$P_NUM_CHARS}"
     ITERATIONS="${ITERATIONS:-$P_ITERATIONS}"
     PREFIX="${PREFIX:-$P_PREFIX}"
@@ -135,7 +139,8 @@ PYEOF
     ALGO="sha512"
 
     echo "Perfil '$PROFILE_NAME' descriptografado com sucesso."
-    echo "  Salt/Serviço : ${SALT:-(vazio)}"
+    echo "  Username     : ${USERNAME:-(vazio)}"
+    echo "  Site         : ${SITE:-(vazio)}"
     echo "  Caracteres   : ${NUM_CHARS:-(completo)}"
     echo "  Iterações    : ${ITERATIONS:-1}"
     echo "  Prefixo      : ${PREFIX:-(vazio)}"
@@ -150,19 +155,20 @@ ITERATIONS=${ITERATIONS:-1}
 ALGO=${ALGO:-sha512}
 
 if [ -z "$KEYWORD" ]; then
-    echo "Uso: $0 -p <palavra_chave> [-a sha512] [-c <num_caracteres>] [-i <num_iteracoes>] [-s <salt_servico>] [-x <prefixo>] [-y <sufixo>]"
+    echo "Uso: $0 -p <palavra_chave> [-a sha512] [-c <num_caracteres>] [-i <num_iteracoes>] [-u <username>] [-w <site>] [-x <prefixo>] [-y <sufixo>]"
     echo "  -p: Palavra-chave (seed) para gerar a senha (obrigatório)"
     echo "  -a: Algoritmo de hash (opcional, padrão: sha512)"
-    echo "  -c: Número de caracteres (opcional, se omitido retorna o hash completo)"
+    echo "  -c: Número de caracteres, máximo 128 (opcional, se omitido retorna o hash completo de 128 caracteres)"
     echo "  -i: Número de iterações (opcional, padrão: 1)"
-    echo "  -s: Salt ou identificador do serviço (opcional)"
+    echo "  -u: Username ou e-mail (opcional, combinado com -w forma o salt)"
+    echo "  -w: Site ou aplicativo (opcional, combinado com -u forma o salt)"
     echo "  -x: Prefixo (opcional) adicionado ao resultado final"
     echo "  -y: Sufixo (opcional) adicionado ao resultado final"
     echo ""
     echo "Modo descriptografar:"
     echo "  $0 -d -f <arquivo.json> -n <nome_perfil> -p <palavra_chave>"
     echo ""
-    echo "Exemplo: $0 -p minha_senha -c 10 -i 5 -s gmail -x '#meu' -y '#sobrenome'"
+    echo "Exemplo: $0 -p minha_senha -c 10 -i 5 -u usuario@gmail.com -w gmail -x '#meu' -y '#sobrenome'"
     exit 1
 fi
 
@@ -175,6 +181,7 @@ case $ALGO in
 esac
 
 CURRENT_VAL="$KEYWORD"
+SALT="${USERNAME}${SITE}"
 
 if [ -n "$SALT" ]; then
     CURRENT_VAL="${CURRENT_VAL}:${SALT}"

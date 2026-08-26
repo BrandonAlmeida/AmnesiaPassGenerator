@@ -1,6 +1,6 @@
 # Amnesia Pass Generator
 
-Um gerador de senhas determinístico baseado em hash SHA512 iterativo. Dado uma palavra-chave e um salt por serviço, a mesma senha é sempre reproduzida sem precisar armazená-la.
+Um gerador de senhas determinístico baseado em hash SHA512 iterativo. Dado uma palavra-chave, um username/e-mail e um site/aplicativo, a mesma senha é sempre reproduzida sem precisar armazená-la.
 
 Este repositório inclui duas implementações independentes do mesmo algoritmo:
 
@@ -13,10 +13,11 @@ Este repositório inclui duas implementações independentes do mesmo algoritmo:
 
 ## Como funciona
 
-1. Concatena a palavra-chave com o salt do serviço no formato `keyword:salt` (se salt for fornecido).
-2. Calcula SHA512 do resultado e re-hasha o hex digest por N iterações.
-3. Trunca o hash final para o número de caracteres desejado (ou retorna o hash completo).
-4. Aplica prefixo e sufixo opcionais ao resultado.
+1. Concatena o username/e-mail com o site/aplicativo formando o salt (`username + site`).
+2. Concatena a palavra-chave com o salt no formato `keyword:salt` (se algum dos dois for fornecido).
+3. Calcula SHA512 do resultado e re-hasha o hex digest por N iterações.
+4. Trunca o hash final para o número de caracteres desejado (ou retorna o hash completo).
+5. Aplica prefixo e sufixo opcionais ao resultado.
 
 O processo é determinístico: os mesmos parâmetros sempre produzem a mesma saída.
 
@@ -34,7 +35,7 @@ O processo é determinístico: os mesmos parâmetros sempre produzem a mesma sa�
 |------|-----------|-------------|
 | `-p` | Palavra-chave (seed mestra) | Sim |
 | `-a` | Algoritmo — apenas `sha512` | Sim |
-| `-c` | Comprimento da senha final (sem valor = hash completo) | Não |
+| `-c` | Comprimento da senha final em caracteres — máximo 128 (sem valor = hash completo de 128 caracteres) | Não |
 | `-i` | Número de iterações (padrão: `1`) | Não |
 | `-s` | Salt / identificador do serviço (ex.: `github`, `gmail`) | Não |
 | `-x` | Prefixo adicionado ao resultado final | Não |

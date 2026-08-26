@@ -63,7 +63,8 @@ function persistProfiles(profiles) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const keywordInput = document.getElementById('keyword');
-    const serviceInput = document.getElementById('service');
+    const usernameInput = document.getElementById('username');
+    const siteInput = document.getElementById('site');
     const numCharsInput = document.getElementById('numChars');
     const iterationsInput = document.getElementById('iterations');
     const prefixInput = document.getElementById('prefix');
@@ -100,7 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generatePassword() {
         const keyword = keywordInput.value;
-        const service = serviceInput.value;
+        const username = usernameInput.value;
+        const site = siteInput.value;
+        const salt = username + site;
         let numChars = parseInt(numCharsInput.value);
         let iterations = parseInt(iterationsInput.value);
         const prefix = prefixInput.value || '';
@@ -120,8 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let currentHash = keyword;
 
-        if (service) {
-            currentHash = `${currentHash}:${service}`;
+        if (salt) {
+            currentHash = `${currentHash}:${salt}`;
         }
 
         for (let i = 0; i < iterations; i++) {
@@ -320,7 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const data = {
                 keyword:    keywordInput.value,
-                service:    serviceInput.value,
+                username:   usernameInput.value,
+                site:       siteInput.value,
                 numChars:   numCharsInput.value,
                 iterations: iterationsInput.value,
                 prefix:     prefixInput.value,
@@ -374,7 +378,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const data = await decryptProfileData(passkey, entry);
             keywordInput.value    = data.keyword    ?? '';
-            serviceInput.value    = data.service    ?? '';
+            usernameInput.value   = data.username   ?? '';
+            siteInput.value       = data.site       ?? '';
             numCharsInput.value   = data.numChars   ?? '';
             iterationsInput.value = data.iterations ?? '1';
             prefixInput.value     = data.prefix ?? '';
